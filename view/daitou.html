@@ -11,6 +11,7 @@
     <div id="menu"></div>
     <div id="notices_board" class="notices_board">
         <div id="notices_board_bar"></div>
+        <div id="notices_board_content"></div>
         <div class="list-item-more"></div>
     </div>
     <div id="cursor"></div>
@@ -29,25 +30,26 @@
 <script type="application/javascript" src="../module/transfer.module.js"></script>
 <!--<script type="application/javascript" src="../module/weather.module.js"></script>-->
 <script type="application/javascript">
-    function MenuComponent() {
+    function MenuComponent(resId) {
         MenuModule.call(this);
 
+        this.resourceId = resId;            //  默认使用BAR第一个元素的resourceId
         this.menuPageArray = [{
-            itemsPerLine: [1],           // 每行所包含的元素数量
+            itemsPerLine: [1],              // 每行所包含的元素数量
             menuItemArray: [
                 {
                     left: 178,
                     top: 150,
                     width: 824,
                     height: 467,
-                    bgImageSrc: '',
-                    resourceId: cmsConfig.indexResourceIdArray[2].resourceId
+                    bgImageSrc: 'url(../images/index/1.jpg) no-repeat',
+                    resourceId: 0
                 }
             ]
         }];
     }
 
-    function ListComponent() {
+    function ListComponent(resId) {
         ListModule.call(this);
 
         // 属性
@@ -67,7 +69,7 @@
         this.itemMoreWidth = 132;
         this.itemMoreHeight = 32;
         this.listItemNum = 8;
-        this.resourceId = cmsConfig.indexResourceIdArray[2].resourceId;
+        this.resourceId = resId;                    //  默认使用BAR第一个元素的resourceId
 
         // 方法
     }
@@ -122,6 +124,8 @@
         };
 
         this.moveY = function (direction) {
+            var that = this;
+
             this.cursor.focusOut();
             switch (this.cursor.focusArea) {
                 case 0:         // 菜单
@@ -131,6 +135,15 @@
                     break;
                 case 5:         // 栏目
                     this.cursor.bar.moveY(direction, true);
+//                    console.log(this.cursor.bar.barItemArray[this.cursor.bar.focusPos].menuResourceId);
+//                    console.log(this.cursor.bar.barItemArray[this.cursor.bar.focusPos].listResourceId);
+                    this.cursor.menu.resourceId = this.cursor.bar.barItemArray[this.cursor.bar.focusPos].menuResourceId;
+                    this.cursor.list.resourceId = this.cursor.bar.barItemArray[this.cursor.bar.focusPos].listResourceId;
+                    this.cursor.menu.menuPageArray[0].menuItemArray[0].bgImageSrc = 'url(../images/index/' + (this.cursor.bar.focusPos + 1) + '.jpg) no-repeat';
+                    this.cursor.menu.init();
+                    this.cursor.list.init(function () {
+                        that.cursor.focusOn();
+                    });
                     break;
                 default:
                     break;
@@ -140,11 +153,6 @@
 
         this.doBack = function () {
             window.location.href = 'http://10.215.0.10:80/ui3/ui3/loading.htm?opk=4';
-//            if ("undefined" !== typeof(GlobalVarManager)) {
-//                window.location.href = GlobalVarManager.getItemStr("tvPortalUrl");
-//            } else {
-//                window.location.href = 'http://10.215.0.10:80/ui3/ui3/loading.htm?opk=4';
-//            }
         };
 
         this.doSelect = function () {
@@ -251,8 +259,8 @@
     window.onload = function () {
         var
             barComponent = new BarComponent(),
-            menuComponent = new MenuComponent(),
-            listComponent = new ListComponent(),
+            menuComponent = new MenuComponent(barComponent.barItemArray[0].menuResourceId),
+            listComponent = new ListComponent(barComponent.barItemArray[0].listResourceId),
             cursorComponent = new CursorComponent(barComponent, menuComponent, listComponent),
             transferComponent = new TransferComponent(cursorComponent);
 //            weatherModule = new WeatherModule();

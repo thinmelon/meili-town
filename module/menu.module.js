@@ -13,25 +13,46 @@ function MenuModule() {
     this.itemsPerLine = [];               // 每行所包含的元素数量
     this.menuItemArray = [];
     this.menuPageArray = [];
+    this.resourceId = 0;
 
     this.init = function () {
         var i,
             length,
-            menu;
+            menu,
+            that = this,
+            menuItem = document.createElement('div');
 
         this.destroy();
         this.itemsPerLine = this.menuPageArray[this.curMenuPageIndex].itemsPerLine;
         this.menuItemArray = this.menuPageArray[this.curMenuPageIndex].menuItemArray;
         menu = document.getElementById('menu');
-        for (i = 0, length = this.menuItemArray.length; i < length; i++) {
-            var menuItem = document.createElement('div');
-            menuItem.className = 'menu-item';
-            menuItem.style.left = this.menuItemArray[i].left + 'px';
-            menuItem.style.top = this.menuItemArray[i].top + 'px';
-            menuItem.style.width = this.menuItemArray[i].width + 'px';
-            menuItem.style.height = this.menuItemArray[i].height + 'px';
-            menuItem.style.background = this.menuItemArray[i].bgImageSrc;
-            menu.appendChild(menuItem);
+        menuItem.className = 'menu-item';
+
+        if (cmsConfig.environment === 'PRODUCT' && this.resourceId !== 0) {
+            cmsApi.getListItems(this.resourceId, this.menuItemArray.length, 1, function (response) {
+                if (response.hasOwnProperty('code') && ('1' === response.code || 1 === response.code)) {
+                    for (i = 0, length = response.dataArray.length; i < length; i++) {
+                        document.getElementById('debug-message').innerHTML += '<br/>' + '  IMAGE  ==> ' + response.dataArray[i].img;
+                        menuItem.style.left = that.menuItemArray[i].left + 'px';
+                        menuItem.style.top = that.menuItemArray[i].top + 'px';
+                        menuItem.style.width = that.menuItemArray[i].width + 'px';
+                        menuItem.style.height = that.menuItemArray[i].height + 'px';
+                        menuItem.style.background = 'url(' + cmsConfig.imgUrl + response.dataArray[i].img + ')';
+                        menu.appendChild(menuItem);
+                    }
+                }
+            });
+        } else {
+
+            for (i = 0, length = this.menuItemArray.length; i < length; i++) {
+                menuItem.style.left = this.menuItemArray[i].left + 'px';
+                menuItem.style.top = this.menuItemArray[i].top + 'px';
+                menuItem.style.width = this.menuItemArray[i].width + 'px';
+                menuItem.style.height = this.menuItemArray[i].height + 'px';
+                menuItem.style.background = this.menuItemArray[i].bgImageSrc;
+                // console.log('menu ==> init | bgImageSrc', this.menuItemArray[i].bgImageSrc);
+                menu.appendChild(menuItem);
+            }
         }
     };
 

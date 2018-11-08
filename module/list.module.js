@@ -43,32 +43,6 @@ function ListModule() {
             noticesBoard,
             noticesBoardBar;
 
-        if (cmsConfig.environment === 'DEBUG') {
-            var test = [
-                {assetid: 611, title: '城厢区是福建省莆田市辖区，亦称...', img: '', flag: 1, id: 111},
-                {assetid: 611, title: '仙游县地处福建东南沿海中部，湄...', img: '1', flag: 0, id: 111},
-                {assetid: 611, title: '荔城区位于福建东南沿海中部，北...', img: '1', flag: 0, id: 111},
-                {assetid: 611, title: '城厢区是福建省莆田市辖区，亦称...', img: '1', flag: 1, id: 111},
-                {assetid: 611, title: '涵江区位于福建省莆田市东部沿海...', flag: 0, id: 111},
-                {assetid: 611, title: '秀屿区位于福建东南沿海中部，与...', flag: 0, id: 111},
-                {assetid: 611, title: '湄洲湾北岸经济开发区是经国家发... 副本 2', img: '1', flag: 0, id: 111},
-                {assetid: 611, title: '湄洲湾北岸经济开发区是经国家发... 副本 2', img: '1', flag: 0, id: 111},
-                {assetid: 611, title: '湄洲湾北岸经济开发区是经国家发... 副本 2', img: '1', flag: 0, id: 111}
-
-            ];
-            this.addListItem(test);
-        } else {
-            if (this.resourceId !== '') {
-                cmsApi.getListItems(this.resourceId, this.listItemNum + 1, 1, function (response) {
-                    if (response.hasOwnProperty('code')) {
-                        if ('1' === response.code || 1 === response.code) {
-                            that.addListItem(response.dataArray);
-                        }
-                    }
-                    callback();
-                });
-            }
-        }
         noticesBoard = document.getElementById('notices_board');
         noticesBoard.style.left = this.boardLeft + 'px';
         noticesBoard.style.top = this.boardTop + 'px';
@@ -84,13 +58,43 @@ function ListModule() {
         noticesBoardBar.innerHTML = this.noticesBoardBarText;
 
         if (cmsConfig.environment === 'DEBUG') {
+            var test = [
+                {assetid: 611, title: '城厢区是福建省莆田市辖区，亦称...', img: '', flag: 1, id: 111},
+                {assetid: 611, title: '仙游县地处福建东南沿海中部，湄...', img: '1', flag: 0, id: 111},
+                {assetid: 611, title: '荔城区位于福建东南沿海中部，北...', img: '1', flag: 0, id: 111},
+                {assetid: 611, title: '城厢区是福建省莆田市辖区，亦称...', img: '1', flag: 1, id: 111},
+                {assetid: 611, title: '涵江区位于福建省莆田市东部沿海...', flag: 0, id: 111},
+                {assetid: 611, title: '秀屿区位于福建东南沿海中部，与...', flag: 0, id: 111},
+                {assetid: 611, title: '湄洲湾北岸经济开发区是经国家发... 副本 2', img: '1', flag: 0, id: 111},
+                {assetid: 611, title: '湄洲湾北岸经济开发区是经国家发... 副本 2', img: '1', flag: 0, id: 111},
+                {assetid: 611, title: '湄洲湾北岸经济开发区是经国家发... 副本 2', img: '1', flag: 0, id: 111}
+
+            ];
+            this.addListItem(test);
             callback();
+        } else {
+            if (this.resourceId !== '') {
+                cmsApi.getListItems(this.resourceId, this.listItemNum + 1, 1, function (response) {
+                    if (response.hasOwnProperty('code')) {
+                        if ('1' === response.code || 1 === response.code) {
+                            that.addListItem(response.dataArray);
+                        }
+                    }
+                    callback();
+                });
+            }
         }
     };
 
     this.removeAllListItem = function () {
+        var boardElement = document.getElementById('notices_board_content');
+
         while (this.listItemTitleArray.length > 0) {
             this.listItemTitleArray.pop();
+        }
+
+        while (boardElement.hasChildNodes()) {
+            boardElement.removeChild(boardElement.firstChild);
         }
     };
 
@@ -98,7 +102,8 @@ function ListModule() {
         var j,
             length,
             newListItem,
-            newListItemText;
+            newListItemText,
+            boardElement = document.getElementById('notices_board_content');
 
         this.removeAllListItem();
 
@@ -114,7 +119,7 @@ function ListModule() {
             newListItemText.style.color = '#000000';
             newListItemText.style.width = (this.itemWidth - 20) + 'px';
             newListItem.appendChild(newListItemText);
-            document.getElementById('notices_board').appendChild(newListItem);
+            boardElement.appendChild(newListItem);
 
             this.listItemTitleArray.push({
                 assetID: array[j].assetid,
