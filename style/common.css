@@ -10,16 +10,27 @@
     background-size: 100%;
 }
 
-/*.background {*/
-/*position: absolute;*/
-/*left: 0;*/
-/*top: 0;*/
-/*width: 1280px;*/
-/*height: 720px;*/
-/*margin: 0;*/
-/*background: url(../images/bg-img.jpg) no-repeat;*/
-/*background-size: 100%;*/
-/*}*/
+.dongqiao {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1280px;
+    height: 720px;
+    margin: 0;
+    background: url(../images/dongqiao-bg.jpg) no-repeat;
+    background-size: 100%;
+}
+
+.nanridao {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1280px;
+    height: 720px;
+    margin: 0;
+    background: url(../images/nanridao-bg.jpg) no-repeat;
+    background-size: 100%;
+}
 
 /* ----  内容版块  ---- */
 .row {
@@ -28,7 +39,7 @@
 
 /* ----  栏目  ---- */
 .bar {
-    /*background: url(../images/bar/bar-bg.png) center no-repeat;*/
+    background: url(../images/bar/bar-bg.png) center no-repeat;
     position: absolute;
     top: 148px;
     left: 56px;

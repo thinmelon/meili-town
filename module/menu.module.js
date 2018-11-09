@@ -32,12 +32,15 @@ function MenuModule() {
             cmsApi.getListItems(this.resourceId, this.menuItemArray.length, 1, function (response) {
                 if (response.hasOwnProperty('code') && ('1' === response.code || 1 === response.code)) {
                     for (i = 0, length = response.dataArray.length; i < length; i++) {
-                        document.getElementById('debug-message').innerHTML += '<br/>' + '  IMAGE  ==> ' + response.dataArray[i].img;
+                        // document.getElementById('debug-message').innerHTML += '<br/>' + '  IMAGE  ==> ' + response.dataArray[i].img;
                         menuItem.style.left = that.menuItemArray[i].left + 'px';
                         menuItem.style.top = that.menuItemArray[i].top + 'px';
                         menuItem.style.width = that.menuItemArray[i].width + 'px';
                         menuItem.style.height = that.menuItemArray[i].height + 'px';
                         menuItem.style.background = 'url(' + cmsConfig.imgUrl + response.dataArray[i].img + ')';
+                        that.menuItemArray[i].resourceId = response.dataArray[i].id;
+                        that.menuItemArray[i].assetId = response.dataArray[i].assetid;
+                        that.menuItemArray[i].flag = parseInt(response.dataArray[i].flag);
                         menu.appendChild(menuItem);
                     }
                 }
@@ -125,7 +128,49 @@ function MenuModule() {
         }
     };
 
-    this.doSelect = function (postfix) {
-        window.location.href = 'more.html' + postfix;
+    this.doSelect = function (transferComponent, backURL, resourceId) {
+        var
+            i,
+            _num = 0,
+            postfix = '',
+            params;
+
+        for (i = 0; i < this.focusPosY; i++) {
+            _num += this.itemsPerLine[i];
+        }
+        _num += this.focusPosX;
+
+        params = {
+            'PG-ONE': {
+                focusArea: transferComponent.cursor.focusArea,
+                focusPos: this.focusPos
+            }
+        };
+        if (this.menuItemArray[_num].flag === 0) {
+            params.PG_TEXT = {
+                resourceId: this.menuItemArray[_num].resourceId,
+                backURL: backURL
+            };
+            postfix = transferComponent.package(params);
+            window.location.href = 'detail.html' + postfix;
+        }
+        else if (this.menuItemArray[_num].flag === 1) {
+            params.VIDEO = {
+                backURL: transferComponent.backUrl(),
+                fileName: transferComponent.cursor.fileName,
+                focusArea: transferComponent.cursor.focusArea,
+                assertId: this.menuItemArray[_num].assetId
+            };
+            postfix = transferComponent.package(params);
+            window.location.href = 'video.html' + postfix;
+        } else {
+            params.PG_MORE = {
+                resourceId: resourceId,
+                backURL: backURL,
+                pageIndex: 1
+            };
+            postfix = transferComponent.package(params);
+            window.location.href = 'more.html' + postfix;
+        }
     };
 }

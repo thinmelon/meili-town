@@ -192,14 +192,42 @@ function ListModule() {
         }
     };
 
-    this.doSelect = function (postfix) {
-        if (this.listItemTitleArray[this.focusPos].flag === 0) {                    // 图文详情
-            window.location.href = 'textures.html' + postfix;
+    this.doSelect = function (transferComponent, backURL, resourceId) {
+        var
+            postfix = '',
+            params;
+
+        params = {
+            'PG-ONE': {
+                focusArea: transferComponent.cursor.focusArea,
+                focusPos: this.focusPos
+            }
+        };
+        if (this.listItemTitleArray[this.focusPos].flag === 0) {
+            params.PG_TEXT = {
+                resourceId: this.listItemTitleArray[this.focusPos].id,
+                backURL: backURL
+            };
+            postfix = transferComponent.package(params);
+            window.location.href = 'detail.html' + postfix;
         }
-        else if (this.listItemTitleArray[this.focusPos].flag === 1) {               //  视频资源
+        else if (this.listItemTitleArray[this.focusPos].flag === 1) {
+            params.VIDEO = {
+                backURL: transferComponent.backUrl(),
+                fileName: transferComponent.cursor.fileName,
+                focusArea: transferComponent.cursor.focusArea,
+                focusPos: this.focusPos,
+                assertId: this.listItemTitleArray[this.focusPos].assetID
+            };
+            postfix = transferComponent.package(params);
             window.location.href = 'video.html' + postfix;
-        }
-        else {                                                                      // 更多内容
+        } else {
+            params.PG_MORE = {
+                resourceId: resourceId,
+                backURL: backURL,
+                pageIndex: 1
+            };
+            postfix = transferComponent.package(params);
             window.location.href = 'more.html' + postfix;
         }
     };

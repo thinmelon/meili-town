@@ -47,7 +47,7 @@ function BarModule() {
     };
 
     this.focusOut = function () {
-        document.getElementById('bar-item-wrapper-' + this.focusPos).style.backgroundColor = '';
+        document.getElementById('bar-item-wrapper-' + this.focusPos).style.backgroundColor = '#DCDCDC';
         document.getElementById('bar-item-' + this.focusPos).style.color = '#000';
     };
 

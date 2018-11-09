@@ -98,8 +98,6 @@ function TransferModule() {
         // 判断cursor模块不为空 并且 参数等于当前页面的深度
         if (this.cursor && key === this.cursor.fileName) {
             value = jsonUtils.parse(rawData);
-            console.dir(value);
-
             if (value.hasOwnProperty('focusArea')) {
                 // 光标所在区域
                 this.cursor.focusArea = parseInt(value.focusArea);

@@ -23,13 +23,83 @@
 <script type="application/javascript" src="../cms/cms.config.js"></script>
 <script type="application/javascript" src="../cms/cms.api.js"></script>
 <script type="application/javascript" src="../module/bar.module.js"></script>
-<script type="application/javascript" src="../wrapper/bar.wrapper.js"></script>
 <script type="application/javascript" src="../module/menu.module.js"></script>
 <script type="application/javascript" src="../module/list.module.js"></script>
 <script type="application/javascript" src="../module/cursor.module.js"></script>
 <script type="application/javascript" src="../module/transfer.module.js"></script>
 <!--<script type="application/javascript" src="../module/weather.module.js"></script>-->
 <script type="application/javascript">
+    function BarComponent() {
+        BarModule.call(this);
+
+        this.barItemArray = [
+            {
+                title: '走进埭头',
+                menuResourceId: 875,
+                listResourceId: 893,
+                url: 'index.html',
+                top: 0
+            },
+            {
+                title: '智慧党建',
+                menuResourceId: 876,
+                listResourceId: 909,
+                url: 'news.html',
+                top: 50
+            },
+            {
+                title: '政务公开',
+                menuResourceId: 855,
+                listResourceId: 919,
+                url: 'beian.html',
+                top: 100
+            },
+            {
+                title: '扫黑除恶',
+                menuResourceId: 875,
+                listResourceId: 913,
+                url: 'apartment.html',
+                top: 150
+            },
+            {
+                title: '工作动态',
+                menuResourceId: 876,
+                listResourceId: 893,
+                url: 'smart.html',
+                top: 200
+            },
+            {
+                title: '精神文明',
+                menuResourceId: 855,
+                listResourceId: 909,
+                url: 'culture.html',
+                top: 250
+            },
+            {
+                title: '平安创建',
+                menuResourceId: 875,
+                listResourceId: 919,
+                //url: 'http://10.215.0.39/fujiandangjianNew/index2.html',
+                url: 'topic.html',
+                top: 300
+            },
+            {
+                title: '三大攻坚战',
+                menuResourceId: 876,
+                listResourceId: 913,
+                url: 'putian.html',
+                top: 350
+            }
+            // {
+            //     title: '电视首页',
+            //     resourceId: 0,
+            //     url: 'http://10.215.0.10:80/ui3/ui3/loading.htm?opk=4',
+            //     left: 1056,
+            //     width: 120
+            // }
+        ];
+    }
+
     function MenuComponent(resId) {
         MenuModule.call(this);
 
@@ -43,7 +113,9 @@
                     width: 824,
                     height: 467,
                     bgImageSrc: 'url(../images/index/1.jpg) no-repeat',
-                    resourceId: 0
+                    resourceId: 0,
+                    assetId: '',
+                    flag: 0
                 }
             ]
         }];
@@ -156,68 +228,15 @@
         };
 
         this.doSelect = function () {
-            var
-                postfix = '',
-                params;
-
             this.remove(this.cursor.fileName);
             switch (this.cursor.focusArea) {
                 case 0:         // 菜单
-//                    if (this.cursor.menu.focusPosX === 0 && this.cursor.menu.focusPosY === 0) {
-//                        params =
-//                            {
-//                                /**
-//                                 * 一级页面
-//                                 */
-//                                'PG-ONE': {
-//                                    focusArea: this.cursor.focusArea,
-//                                    focusPosX: this.cursor.menu.focusPosX,
-//                                    focusPosY: this.cursor.menu.focusPosY
-//                                },
-//                                'VIDEO': {
-//                                    backURL: this.backUrl(),
-//                                    focusArea: this.cursor.focusArea,
-//                                    focusPosX: this.cursor.menu.focusPosX,
-//                                    focusPosY: this.cursor.menu.focusPosY,
-//                                    resourceId: cmsConfig.indexResourceIdArray[1].resourceId
-//                                }
-//                            };
-//                        postfix = this.package(params);
-//                        window.location.href = 'video.html' + postfix;
-//                    }
+                    this.cursor.menu.doSelect(this, 'daitou.html', this.cursor.menu.resourceId);
+                    break;
+                case 2:
+                    this.cursor.list.doSelect(this, 'daitou.html', this.cursor.list.resourceId);
                     break;
                 case 5:         // 栏目
-//                    this.doBack();
-                    break;
-                case 6:         // 滚动图片
-                    params =
-                        {
-                            'PG-ONE': {
-                                focusArea: this.cursor.focusArea
-                            },
-                            'VIDEO': {
-                                backURL: this.backUrl(),
-                                focusArea: this.cursor.focusArea,
-                                assertId: this.cursor.swiper.album[this.cursor.swiper.position].assertId
-                            }
-                        };
-                    postfix = this.package(params);
-                    window.location.href = 'video.html' + postfix;
-                    break;
-                case 7:
-                    params =
-                        {
-                            'PG-ONE': {
-                                focusArea: this.cursor.focusArea
-                            },
-                            'VIDEO': {
-                                backURL: this.backUrl(),
-                                focusArea: this.cursor.focusArea,
-                                resourceId: cmsConfig.indexResourceIdArray[1].resourceId
-                            }
-                        };
-                    postfix = this.package(params);
-                    window.location.href = 'video.html' + postfix;
                     break;
                 default:
                     break;
