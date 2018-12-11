@@ -152,7 +152,7 @@ function TransferModule() {
         var value;
 
         if (this.cursor.textures && key === this.cursor.fileName) {
-            //document.getElementById('debug-message').innerHTML += '<br/>' + 'Transfer ==>  setTextureModule';
+            // document.getElementById('debug-message').innerHTML += '<br/>' + 'Transfer ==>  setTextureModule';
             value = jsonUtils.parse(rawData);
 
             // 是否显示图片
@@ -169,6 +169,7 @@ function TransferModule() {
             // }
             // 图文数据的资源请求id
             if (value.hasOwnProperty('resourceId')) {
+                document.getElementById('debug-message').innerHTML += '<br/>' + 'Transfer ==>  setTextureModule ==> resourceId : ' + value.resourceId;
                 this.cursor.textures.resourceId = value.resourceId;
             }
             /* end of if */

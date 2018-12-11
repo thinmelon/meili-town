@@ -21,41 +21,54 @@ function SwiperModule() {
      *  初始化
      */
     this.init = function () {
-        var that = this;
+        var that = this,
+            flag;
 
         if (cmsConfig.environment === 'DEBUG') {
             this.album = [
                 {
-                    img: 'url(../images/index/5.jpg)',
+                    img: 'url(../images/index/1.jpg)',
+                    resourceId: 222,
+                    flag: 0
+                },
+                {
+                    img: 'url(../images/index/2.jpg)',
+                    assertId: 111,
+                    flag: 1
+                },
+                {
+                    img: 'url(../images/index/3.jpg)',
                     resourceId: cmsConfig.indexResourceIdArray[0].resourceId,
-                    assertId: 111
+                    flag: 0
                 },
                 {
-                    img: 'url(../images/index/5.jpg)',
-                    resourceId: cmsConfig.indexResourceIdArray[0].resourceId,
-                    assertId: 111
-                },
-                {
-                    img: 'url(../images/index/5.jpg)',
-                    resourceId: cmsConfig.indexResourceIdArray[0].resourceId
-                },
-                {
-                    img: 'url(../images/index/5.jpg)',
-                    resourceId: cmsConfig.indexResourceIdArray[0].resourceId
+                    img: 'url(../images/index/4.jpg)',
+                    assertId: 111,
+                    flag: 1
                 }
             ];
             this.render();
         } else {
-            //document.getElementById('debug-message').innerHTML += '<br/>' + 'SwiperModule ==> init() ==>  resourceId = ' + this.resourceId;
+            document.getElementById('debug-message').innerHTML += '<br/>' + 'SwiperModule ==> init() ==>  resourceId = ' + this.resourceId;
             if (this.resourceId !== 0) {
                 cmsApi.getListItems(this.resourceId, this.maxCount, 1, function (response) {
                     if (response.hasOwnProperty('code') && ('1' === response.code || 1 === response.code)) {
                         that.remoteImage = true;        //  显示服务器上的图片
                         for (var j = 0, length = response.dataArray.length; (j < length) && (j < that.maxCount); j++) {
-                            that.album.push({
-                                img: response.dataArray[j].img,
-                                assertId: response.dataArray[j].assetid
-                            });
+                            flag = parseInt(response.dataArray[j].flag);
+                            if (flag === 1) {           //  视频资源
+                                that.album.push({
+                                    img: response.dataArray[j].img,
+                                    assertId: response.dataArray[j].assetid,
+                                    flag: flag
+                                });
+                            } else {
+                                that.album.push({       //  图文资源
+                                    img: response.dataArray[j].img,
+                                    resourceId: response.dataArray[j].id,
+                                    flag: flag
+                                });
+                            }
                         }
                         that.render();
                     }
@@ -66,18 +79,30 @@ function SwiperModule() {
         }
     };
 
+    /**
+     *  重绘
+     */
     this.render = function () {
-        var swiper = document.getElementById('swiper');
+        var i, length, swiperIndexItem,
+            swiper = document.getElementById('swiper'),
+            swiperIndexGroup = document.createElement('div'),
+            children = swiper.childNodes;
+
         // 初始化滑块视图容器
         swiper.style.top = this.swiperTop + 'px';
         swiper.style.left = this.swiperLeft + 'px';
         swiper.style.width = this.swiperWidth + 'px';
         swiper.style.height = this.swiperHeight + 'px';
+
+        //  清空数组并移除结点
+        for (i = children.length - 1; i >= 0; i--) {
+            swiper.removeChild(children[i]);
+        }
+
         // 创建滑块图片下标组
-        var swiperIndexGroup = document.createElement('div');
         swiperIndexGroup.className = 'swiper-index-group';
+
         // 生成滑块图片下标
-        var i, length, swiperIndexItem;
         for (i = 0, length = this.album.length; i < length; i++) {
             swiperIndexItem = document.createElement('div');
             swiperIndexItem.innerHTML = i + 1;
@@ -144,6 +169,52 @@ function SwiperModule() {
     };
 
     /**
+     * 选择
+     * @param transferComponent
+     * @param backURL
+     * @param resourceId
+     */
+    this.doSelect = function (transferComponent, backURL, resourceId) {
+        var
+            postfix = '',
+            params;
+
+        params = {
+            'PG-ONE': {
+                focusArea: transferComponent.cursor.focusArea,
+                position: this.position
+            }
+        };
+        if (this.album[this.position].flag === 0) {
+            params.PG_TEXT = {
+                resourceId: this.album[this.position].resourceId,
+                backURL: backURL
+            };
+            postfix = transferComponent.package(params);
+            window.location.href = 'detail.html' + postfix;
+        }
+        else if (this.album[this.position].flag === 1) {
+            params.VIDEO = {
+                backURL: transferComponent.backUrl(),
+                fileName: transferComponent.cursor.fileName,
+                focusArea: transferComponent.cursor.focusArea,
+                position: this.position,
+                assertId: this.album[this.position].assertId
+            };
+            postfix = transferComponent.package(params);
+            window.location.href = 'video.html' + postfix;
+        } else {
+            params.PG_MORE = {
+                resourceId: resourceId,
+                backURL: backURL,
+                pageIndex: 1
+            };
+            postfix = transferComponent.package(params);
+            window.location.href = 'more.html' + postfix;
+        }
+    };
+
+    /**
      * 设置背景图片
      */
     this.setBackgroundImage = function () {
@@ -159,6 +230,7 @@ function SwiperModule() {
     this.triggerTimer = function () {
         var that = this;
 
+        clearInterval(this.timerId);
         this.setBackgroundImage();
         document.getElementById('swiper-index-' + this.position).style.backgroundColor = '#13934F';
 

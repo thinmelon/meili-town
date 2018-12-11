@@ -14,7 +14,7 @@ function PagerModule() {
     this.setParameters = function () {
         this.offset_height = document.getElementById("textures-trapper").offsetHeight;
         this.scroll_height = document.getElementById("textures-text").scrollHeight;
-        document.getElementById("debug-message").innerHTML += "<br/>" + "offsetHeight: " + this.offset_height + " scrollHeight: " + this.scroll_height;
+        // document.getElementById("debug-message").innerHTML += "<br/>" + "offsetHeight: " + this.offset_height + " scrollHeight: " + this.scroll_height;
         this.total_pages = Math.ceil(this.scroll_height / this.offset_height);
         this.cur_page = 1;
         document.getElementById("textures-pager").innerHTML = this.cur_page + "/" + this.total_pages;

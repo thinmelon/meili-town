@@ -39,13 +39,12 @@
 
 /* ----  栏目  ---- */
 .bar {
-    background: url(../images/bar/bar-bg.png) center no-repeat;
     position: absolute;
     top: 148px;
     left: 56px;
     width: 120px;
     height: 468px;
-    margin: 0 auto;
+    background: url(../images/bar/bar-bg.png) no-repeat;
 }
 
 .bar-item-wrapper {
@@ -56,7 +55,7 @@
 }
 
 .bar-item {
-    font: 17px "Microsoft YaHei";
+    font: 19px "Microsoft YaHei";
     text-align: center;
     line-height: 39px;
     margin: 10px 10px 0 10px;
@@ -114,7 +113,7 @@
     top: 0;
     height: 25px;
     line-height: 30px;
-    font: 20px "Microsoft YaHei";
+    font: 21px "Microsoft YaHei";
     overflow: hidden;
 }
 

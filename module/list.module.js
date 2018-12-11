@@ -55,6 +55,7 @@ function ListModule() {
         noticesBoardBar.style.height = this.noticesBoardBarHeight + 'px';
         noticesBoardBar.style.fontSize = this.noticesBoardBarFontSize;
         noticesBoardBar.style.color = this.noticesBoardBarColor;
+        noticesBoardBar.style.textAlign = 'center';
         noticesBoardBar.innerHTML = this.noticesBoardBarText;
 
         if (cmsConfig.environment === 'DEBUG') {

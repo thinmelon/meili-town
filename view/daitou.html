@@ -8,7 +8,7 @@
 <body bgcolor="transparent">
 <div class="index-bg">
     <div id="bar" class="bar"></div>
-    <div id="menu"></div>
+    <div id="swiper" class="swiper"></div>
     <div id="notices_board" class="notices_board">
         <div id="notices_board_bar"></div>
         <div id="notices_board_content"></div>
@@ -23,11 +23,10 @@
 <script type="application/javascript" src="../cms/cms.config.js"></script>
 <script type="application/javascript" src="../cms/cms.api.js"></script>
 <script type="application/javascript" src="../module/bar.module.js"></script>
-<script type="application/javascript" src="../module/menu.module.js"></script>
+<script type="application/javascript" src="../module/swiper.module.js"></script>
 <script type="application/javascript" src="../module/list.module.js"></script>
 <script type="application/javascript" src="../module/cursor.module.js"></script>
 <script type="application/javascript" src="../module/transfer.module.js"></script>
-<!--<script type="application/javascript" src="../module/weather.module.js"></script>-->
 <script type="application/javascript">
     function BarComponent() {
         BarModule.call(this);
@@ -35,58 +34,58 @@
         this.barItemArray = [
             {
                 title: '走进埭头',
-                menuResourceId: 875,
-                listResourceId: 893,
+                swiperResourceId: 1153,
+                listResourceId: 1154,
                 url: 'index.html',
                 top: 0
             },
             {
                 title: '智慧党建',
-                menuResourceId: 876,
-                listResourceId: 909,
+                swiperResourceId: 1155,
+                listResourceId: 1156,
                 url: 'news.html',
                 top: 50
             },
             {
                 title: '政务公开',
-                menuResourceId: 855,
-                listResourceId: 919,
+                swiperResourceId: 1157,
+                listResourceId: 1158,
                 url: 'beian.html',
                 top: 100
             },
             {
                 title: '扫黑除恶',
-                menuResourceId: 875,
-                listResourceId: 913,
+                swiperResourceId: 1159,
+                listResourceId: 1160,
                 url: 'apartment.html',
                 top: 150
             },
             {
                 title: '工作动态',
-                menuResourceId: 876,
-                listResourceId: 893,
+                swiperResourceId: 1161,
+                listResourceId: 1162,
                 url: 'smart.html',
                 top: 200
             },
             {
                 title: '精神文明',
-                menuResourceId: 855,
-                listResourceId: 909,
+                swiperResourceId: 1163,
+                listResourceId: 1164,
                 url: 'culture.html',
                 top: 250
             },
             {
                 title: '平安创建',
-                menuResourceId: 875,
-                listResourceId: 919,
+                swiperResourceId: 1165,
+                listResourceId: 1166,
                 //url: 'http://10.215.0.39/fujiandangjianNew/index2.html',
                 url: 'topic.html',
                 top: 300
             },
             {
                 title: '三大攻坚战',
-                menuResourceId: 876,
-                listResourceId: 913,
+                swiperResourceId: 1167,
+                listResourceId: 1168,
                 url: 'putian.html',
                 top: 350
             }
@@ -100,25 +99,14 @@
         ];
     }
 
-    function MenuComponent(resId) {
-        MenuModule.call(this);
+    function SwiperComponent(resId) {
+        SwiperModule.call(this);
 
-        this.resourceId = resId;            //  默认使用BAR第一个元素的resourceId
-        this.menuPageArray = [{
-            itemsPerLine: [1],              // 每行所包含的元素数量
-            menuItemArray: [
-                {
-                    left: 178,
-                    top: 150,
-                    width: 824,
-                    height: 467,
-                    bgImageSrc: 'url(../images/index/1.jpg) no-repeat',
-                    resourceId: 0,
-                    assetId: '',
-                    flag: 0
-                }
-            ]
-        }];
+        this.swiperTop = 150;
+        this.swiperLeft = 178;
+        this.swiperWidth = 824;
+        this.swiperHeight = 467;
+        this.resourceId = resId;
     }
 
     function ListComponent(resId) {
@@ -146,13 +134,13 @@
         // 方法
     }
 
-    function CursorComponent(bar, menu, list) {
+    function CursorComponent(bar, swiper, list) {
         CursorModule.call(this);
 
         // 属性
         this.focusArea = 5;
         this.bar = bar;
-        this.menu = menu;
+        this.swiper = swiper;
         this.list = list;
         this.fileName = 'PG-ONE';
     }
@@ -170,23 +158,23 @@
         this.moveX = function (direction) {
             this.cursor.focusOut();
             switch (this.cursor.focusArea) {
-                case 0:         // 菜单
-                    if (direction < 0) {
-                        this.cursor.focusArea = 5;
-                    } else {
-                        this.cursor.focusArea = 2;
-                    }
-                    break;
                 case 2:         //  列表
                     if (direction < 0) {
-                        this.cursor.focusArea = 0;
-                        this.cursor.menu.focusPosX = 0;
-                        this.cursor.menu.focusPosY = 0;
+                        this.cursor.focusArea = 6;
                     }
                     break;
                 case 5:         // 栏目
                     if (direction > 0) {
-                        this.cursor.focusArea = 0;
+                        this.cursor.focusArea = 6;
+                    }
+                    break;
+                case 6:         // 滚动海报
+                    if (-1 === this.cursor.swiper.moveX(direction)) {
+                        if (direction < 0) {
+                            this.cursor.focusArea = 5;
+                        } else {
+                            this.cursor.focusArea = 2;
+                        }
                     }
                     break;
                 default:
@@ -200,8 +188,6 @@
 
             this.cursor.focusOut();
             switch (this.cursor.focusArea) {
-                case 0:         // 菜单
-                    break;
                 case 2:         //  列表
                     this.cursor.list.moveY(direction);
                     break;
@@ -209,13 +195,23 @@
                     this.cursor.bar.moveY(direction, true);
 //                    console.log(this.cursor.bar.barItemArray[this.cursor.bar.focusPos].menuResourceId);
 //                    console.log(this.cursor.bar.barItemArray[this.cursor.bar.focusPos].listResourceId);
-                    this.cursor.menu.resourceId = this.cursor.bar.barItemArray[this.cursor.bar.focusPos].menuResourceId;
+                    this.cursor.swiper.resourceId = this.cursor.bar.barItemArray[this.cursor.bar.focusPos].swiperResourceId;
+                    this.cursor.swiper.album = [];                  //  清空海报图集
+                    this.cursor.swiper.position = 0;                //  重置当前海报的位置
                     this.cursor.list.resourceId = this.cursor.bar.barItemArray[this.cursor.bar.focusPos].listResourceId;
-                    this.cursor.menu.menuPageArray[0].menuItemArray[0].bgImageSrc = 'url(../images/index/' + (this.cursor.bar.focusPos + 1) + '.jpg) no-repeat';
-                    this.cursor.menu.init();
+                    this.cursor.swiper.init();
                     this.cursor.list.init(function () {
                         that.cursor.focusOn();
                     });
+                    break;
+                case 6:         // 滚动海报
+                    if (-1 === this.cursor.swiper.moveX(direction)) {
+                        if (direction < 0) {
+                            this.cursor.focusArea = 5;
+                        } else {
+                            this.cursor.focusArea = 2;
+                        }
+                    }
                     break;
                 default:
                     break;
@@ -224,19 +220,21 @@
         };
 
         this.doBack = function () {
-            window.location.href = 'http://10.215.0.10:80/ui3/ui3/loading.htm?opk=4';
+            this.remove(this.cursor.fileName);
+//            window.location.href = 'index.html';
+            window.location.href = 'http://10.184.255.11/ptmlzj/index.htm';
         };
 
         this.doSelect = function () {
             this.remove(this.cursor.fileName);
             switch (this.cursor.focusArea) {
-                case 0:         // 菜单
-                    this.cursor.menu.doSelect(this, 'daitou.html', this.cursor.menu.resourceId);
-                    break;
                 case 2:
                     this.cursor.list.doSelect(this, 'daitou.html', this.cursor.list.resourceId);
                     break;
                 case 5:         // 栏目
+                    break;
+                case 6:
+                    this.cursor.swiper.doSelect(this, 'daitou.html', this.cursor.swiper.resourceId);
                     break;
                 default:
                     break;
@@ -278,9 +276,9 @@
     window.onload = function () {
         var
             barComponent = new BarComponent(),
-            menuComponent = new MenuComponent(barComponent.barItemArray[0].menuResourceId),
+            swiperComponent = new SwiperComponent(barComponent.barItemArray[0].swiperResourceId),
             listComponent = new ListComponent(barComponent.barItemArray[0].listResourceId),
-            cursorComponent = new CursorComponent(barComponent, menuComponent, listComponent),
+            cursorComponent = new CursorComponent(barComponent, swiperComponent, listComponent),
             transferComponent = new TransferComponent(cursorComponent);
 //            weatherModule = new WeatherModule();
 
@@ -294,7 +292,8 @@
          */
         transferComponent.init();
         barComponent.init();
-        menuComponent.init();
+        swiperComponent.init();
+
         /**
          *  光标定位
          */
