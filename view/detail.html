@@ -7,8 +7,10 @@
 </head>
 <body>
 <div class="background">
-    <div class="title">
-        <img id="title-img" src="">
+    <div>
+        <div id="nav-left" class="nav-icon"></div>
+        <div id="drawing-area" class="drawing-area"></div>
+        <div id="nav-right" class="nav-icon"></div>
     </div>
     <div id="content" class="textures">
         <div id="textures-title" class="textures-title"></div>
@@ -55,10 +57,12 @@
                     that.toggle();
                     return false;
                 case 'KEY_LEFT':
-                    that.cursor.textures.pager.turn(document.getElementById('textures-text'), document.getElementById('textures-pager'), -1);
+//                    that.cursor.textures.pager.turn(document.getElementById('textures-text'), document.getElementById('textures-pager'), -1);
+                    that.cursor.textures.changeImage(-1);
                     return false;
                 case 'KEY_RIGHT':
-                    that.cursor.textures.pager.turn(document.getElementById('textures-text'), document.getElementById('textures-pager'), 1);
+//                    that.cursor.textures.pager.turn(document.getElementById('textures-text'), document.getElementById('textures-pager'), 1);
+                    that.cursor.textures.changeImage(1);
                     return false;
                 case 'KEY_PAGE_UP':
                     that.cursor.textures.pager.turn(document.getElementById('textures-text'), document.getElementById('textures-pager'), -1);
@@ -93,12 +97,13 @@
                 '      莆田市教育局是莆田市人民政府主管全市教育事业的职能部门，和中共莆田市委教育工作委员会合署办公。      主要职责: 1、贯彻执行党和国家、省委、省政府有关教育工作的方针、政策和法规，以及市委、市政府有关教育工作的实施意见，落实教育发展战略和发展规划。' +
                 ' 2、研究拟订全市教育事业的发展规划，指导、协调发展规划的实施。' +
                 ' 3、根据《中国教育改革和发展纲要》，党中央、国务院《关于深化教育改革全面推进素质教育的决定》，国务院《关于基础教育改革与发展的决定》，省委、省政府《关于加快实施科教兴省战略的决定》以及市委、市政府《关于加快实施科教兴市战略的决定》的要求，指导协调全市教育改革。',
+//                content: '',
                 imgArr: [
                     {
-                        img: 'url(../images/apartment/2.jpg)'
+                        img: 'url(../images/index/1.jpg)'
                     },
                     {
-                        img: 'url(../images/apartment/3.jpg)'
+                        img: 'url(../images/index/2.jpg)'
                     }
                 ]
             };
