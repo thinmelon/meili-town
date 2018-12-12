@@ -21,21 +21,30 @@ function TexturesModule() {
      *  数据加载
      */
     this.render = function (data) {
-        var that = this,
+        var i, length,
+            that = this,
             drawingAreaElement = document.getElementById('drawing-area'),
             navLeftElement = document.getElementById('nav-left'),
             navRightElement = document.getElementById('nav-right'),
             showImage = data.hasOwnProperty('imgArr') && data.imgArr.length > 0
                 && data.imgArr[0].hasOwnProperty('img') && data.imgArr[0].img !== '';
 
-        if (data.content === '' && showImage) {
+        document.getElementById('debug-message').innerHTML += '<br/>' + ' encode content ==> ' + encodeURIComponent(data.content);
+        if ((encodeURIComponent(data.content) === '%26nbsp%3B' || data.content === '') && showImage) {
             document.getElementById('content').style.display = 'none';                      //  清空图文区
             document.getElementById('swiper').style.display = 'none';
 
-            this.gallery = data.imgArr;         //  赋值图集
+            for (i = 0, length = data.imgArr.length; i < length; i++) {
+                if (cmsConfig.environment === 'DEBUG') {
+                    this.gallery.push(data.imgArr[i].img);
+                } else {
+                    this.gallery.push('url(' + cmsConfig.imgUrl + data.imgArr[i].img + ')');
+                }
+
+            }
             drawingAreaElement.style.width = this.drawingAreaWidth + 'px';                  //  设置图集宽度
             drawingAreaElement.style.height = this.drawingAreaHeight + 'px';                //  设置图集高度
-            drawingAreaElement.style.backgroundImage = this.gallery[this.imageIndex].img;   //  设置当前图片
+            drawingAreaElement.style.backgroundImage = this.gallery[this.imageIndex];       //  设置当前图片
 
             navLeftElement.style.left = this.navLeftElementLeft + 'px';
             navLeftElement.style.backgroundImage = 'url(../images/detail/left.png)';
@@ -82,7 +91,7 @@ function TexturesModule() {
             index = this.imageIndex + direction;
 
         if (index >= 0 && index < this.gallery.length) {
-            drawingAreaElement.style.backgroundImage = this.gallery[index].img;
+            drawingAreaElement.style.backgroundImage = this.gallery[index];
             this.imageIndex = index;
         }
 
