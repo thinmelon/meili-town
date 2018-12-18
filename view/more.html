@@ -7,7 +7,7 @@
 </head>
 <body>
 <div class="background">
-    <div id="bar" class="bar"></div>
+    <!--<div id="bar" class="bar"></div>-->
     <div id="content" class="more-page-content"></div>
     <div class="more-page-index-img">
         <div id="more-page-index-text" class="more-page-index-text">
@@ -22,7 +22,6 @@
 <script type="application/javascript" src="../cms/cms.config.js"></script>
 <script type="application/javascript" src="../cms/cms.api.js"></script>
 <script type="application/javascript" src="../module/bar.module.js"></script>
-<script type="application/javascript" src="../wrapper/bar.wrapper.js"></script>
 <script type="application/javascript" src="../module/cursor.module.js"></script>
 <script type="application/javascript" src="../module/more.module.js"></script>
 <script type="application/javascript" src="../module/pager.module.js"></script>
@@ -32,12 +31,12 @@
         MoreModule.call(this);
     }
 
-    function CursorComponent(bar, more) {
+    function CursorComponent(more) {
         CursorModule.call(this);
 
         // 属性
         this.focusArea = 4;
-        this.bar = bar;
+//        this.bar = bar;
         this.more = more;
         this.fileName = 'PG_MORE';
 
@@ -48,9 +47,9 @@
                 case 4:
                     this.more.moveX(direction);
                     break;
-                case 5:
-                    this.bar.moveX(direction, true);
-                    break;
+//                case 5:
+//                    this.bar.moveX(direction, true);
+//                    break;
                 default:
                     break;
             }
@@ -61,13 +60,11 @@
             this.focusOut();
             switch (this.focusArea) {
                 case 4:
-                    if (-1 === this.more.moveY(direction)) {
-                        this.focusArea = 5;
-                    }
+                    this.more.moveY(direction);
                     break;
-                case 5:
-                    this.focusArea = 4;
-                    break;
+//                case 5:
+//                    this.focusArea = 4;
+//                    break;
                 default:
                     break;
             }
@@ -186,16 +183,16 @@
 
     window.onload = function () {
         var
-            barComponent = new BarComponent(),
+//            barComponent = new BarComponent(),
             moreComponent = new MoreComponent(),
-            cursorComponent = new CursorComponent(barComponent, moreComponent),
+            cursorComponent = new CursorComponent(moreComponent),
 //            cursorComponent = new CursorComponent(moreComponent),
             transferComponent = new TransferComponent(cursorComponent);
 
         document.onkeydown = transferComponent.onKeyDown;
 
         transferComponent.init();
-        barComponent.init();
+//        barComponent.init();
         moreComponent.init(moreComponent.pageIndex, function () {
             cursorComponent.focusOn();
         });

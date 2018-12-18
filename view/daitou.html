@@ -161,11 +161,15 @@
                 case 2:         //  列表
                     if (direction < 0) {
                         this.cursor.focusArea = 6;
+                    } else {
+                        this.cursor.focusArea = 5;
                     }
                     break;
                 case 5:         // 栏目
                     if (direction > 0) {
                         this.cursor.focusArea = 6;
+                    } else {
+                        this.cursor.focusArea = 2;
                     }
                     break;
                 case 6:         // 滚动海报
@@ -229,12 +233,12 @@
             this.remove(this.cursor.fileName);
             switch (this.cursor.focusArea) {
                 case 2:
-                    this.cursor.list.doSelect(this, 'daitou.html', this.cursor.list.resourceId);
+                    this.cursor.list.doSelect(this, 5, this.cursor.bar.focusPos, 'daitou.html', this.cursor.list.resourceId);
                     break;
                 case 5:         // 栏目
                     break;
                 case 6:
-                    this.cursor.swiper.doSelect(this, 'daitou.html', this.cursor.swiper.resourceId);
+                    this.cursor.swiper.doSelect(this, 5, this.cursor.bar.focusPos, 'daitou.html', this.cursor.swiper.resourceId);
                     break;
                 default:
                     break;
@@ -280,7 +284,6 @@
             listComponent = new ListComponent(barComponent.barItemArray[0].listResourceId),
             cursorComponent = new CursorComponent(barComponent, swiperComponent, listComponent),
             transferComponent = new TransferComponent(cursorComponent);
-//            weatherModule = new WeatherModule();
 
         /**
          *  添加按键事件处理
@@ -291,13 +294,15 @@
          *  初始化各模块
          */
         transferComponent.init();
+        document.getElementById('debug-message').innerHTML += '<br/>' + 'onload() ==> BarComponent focusPos = ' + barComponent.focusPos;
+        swiperComponent.resourceId = barComponent.barItemArray[barComponent.focusPos].swiperResourceId;
+        listComponent.resourceId = barComponent.barItemArray[barComponent.focusPos].listResourceId;
         barComponent.init();
         swiperComponent.init();
-
-        /**
-         *  光标定位
-         */
         listComponent.init(function () {
+            /**
+             *  光标定位
+             */
             cursorComponent.focusOn();
         });
     };

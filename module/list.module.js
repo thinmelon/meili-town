@@ -193,15 +193,15 @@ function ListModule() {
         }
     };
 
-    this.doSelect = function (transferComponent, backURL, resourceId) {
+    this.doSelect = function (transferComponent, focusArea, focusPos, backURL, resourceId) {
         var
             postfix = '',
             params;
 
         params = {
             'PG-ONE': {
-                focusArea: transferComponent.cursor.focusArea,
-                focusPos: this.focusPos
+                focusArea: focusArea,
+                focusPos: focusPos
             }
         };
         if (this.listItemTitleArray[this.focusPos].flag === 0) {
@@ -216,8 +216,8 @@ function ListModule() {
             params.VIDEO = {
                 backURL: transferComponent.backUrl(),
                 fileName: transferComponent.cursor.fileName,
-                focusArea: transferComponent.cursor.focusArea,
-                focusPos: this.focusPos,
+                focusArea: focusArea,
+                focusPos: focusPos,
                 assertId: this.listItemTitleArray[this.focusPos].assetID
             };
             postfix = transferComponent.package(params);

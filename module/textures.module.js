@@ -29,7 +29,7 @@ function TexturesModule() {
             showImage = data.hasOwnProperty('imgArr') && data.imgArr.length > 0
                 && data.imgArr[0].hasOwnProperty('img') && data.imgArr[0].img !== '';
 
-        document.getElementById('debug-message').innerHTML += '<br/>' + ' encode content ==> ' + encodeURIComponent(data.content);
+        // document.getElementById('debug-message').innerHTML += '<br/>' + ' encode content ==> ' + encodeURIComponent(data.content);
         if ((encodeURIComponent(data.content) === '%26nbsp%3B' || data.content === '') && showImage) {
             document.getElementById('content').style.display = 'none';                      //  清空图文区
             document.getElementById('swiper').style.display = 'none';

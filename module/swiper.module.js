@@ -171,18 +171,20 @@ function SwiperModule() {
     /**
      * 选择
      * @param transferComponent
+     * @param focusArea
+     * @param focusPos
      * @param backURL
      * @param resourceId
      */
-    this.doSelect = function (transferComponent, backURL, resourceId) {
+    this.doSelect = function (transferComponent, focusArea, focusPos, backURL, resourceId) {
         var
             postfix = '',
             params;
 
         params = {
             'PG-ONE': {
-                focusArea: transferComponent.cursor.focusArea,
-                position: this.position
+                focusArea: focusArea,
+                focusPos: focusPos
             }
         };
         if (this.album[this.position].flag === 0) {
@@ -197,8 +199,8 @@ function SwiperModule() {
             params.VIDEO = {
                 backURL: transferComponent.backUrl(),
                 fileName: transferComponent.cursor.fileName,
-                focusArea: transferComponent.cursor.focusArea,
-                position: this.position,
+                focusArea: focusArea,
+                focusPos: focusPos,
                 assertId: this.album[this.position].assertId
             };
             postfix = transferComponent.package(params);
