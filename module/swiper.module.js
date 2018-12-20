@@ -5,17 +5,18 @@
  */
 
 function SwiperModule() {
-    this.swiperTop = 0;             //  上边距
-    this.swiperLeft = 0;            //  左边距
-    this.swiperWidth = 0;           //  宽度
-    this.swiperHeight = 0;          //  高度
-    this.album = [];                //  图集
-    this.position = 0;              //  当前图片在图集内的位置
-    this.interval = 3000;           //  图片滚动的时间间隔
-    this.timerId = 0;               //  timer ID
-    this.remoteImage = false;       //  图片是否存在CMS上
-    this.resourceId = 0;            //  资源 ID
-    this.maxCount = 5;              //  海报上限
+    this.swiperTop = 0;                 //  上边距
+    this.swiperLeft = 0;                //  左边距
+    this.swiperWidth = 0;               //  宽度
+    this.swiperHeight = 0;              //  高度
+    this.album = [];                    //  图集
+    this.focusPos = 0;                  //  当前图片在图集内的位置
+    this.interval = 3000;               //  图片滚动的时间间隔
+    this.timerId = 0;                   //  timer ID
+    this.showSwiperIndexGroup = true;   //  是否显示图片下标索引
+    this.resourceId = 0;                //  资源 ID
+    this.maxCount = 5;                  //  海报上限
+    //this.remoteImage = false;         //  图片是否存在CMS上
 
     /**
      *  初始化
@@ -53,7 +54,7 @@ function SwiperModule() {
             if (this.resourceId !== 0) {
                 cmsApi.getListItems(this.resourceId, this.maxCount, 1, function (response) {
                     if (response.hasOwnProperty('code') && ('1' === response.code || 1 === response.code)) {
-                        that.remoteImage = true;        //  显示服务器上的图片
+                        //that.remoteImage = true;        //  显示服务器上的图片
                         for (var j = 0, length = response.dataArray.length; (j < length) && (j < that.maxCount); j++) {
                             flag = parseInt(response.dataArray[j].flag);
                             if (flag === 1) {           //  视频资源
@@ -99,18 +100,26 @@ function SwiperModule() {
             swiper.removeChild(children[i]);
         }
 
-        // 创建滑块图片下标组
-        swiperIndexGroup.className = 'swiper-index-group';
+        if (this.showSwiperIndexGroup) {
+            // 创建滑块图片下标组
+            swiperIndexGroup.className = 'swiper-index-group';
 
-        // 生成滑块图片下标
-        for (i = 0, length = this.album.length; i < length; i++) {
+            // 生成滑块图片下标
+            for (i = 0, length = this.album.length; i < length; i++) {
+                swiperIndexItem = document.createElement('div');
+                swiperIndexItem.innerHTML = i + 1;
+                swiperIndexItem.id = 'swiper-index-' + i;
+                swiperIndexItem.className = 'swiper-index';
+                swiperIndexGroup.appendChild(swiperIndexItem);
+            }
+            swiper.appendChild(swiperIndexGroup);
+        } else {
             swiperIndexItem = document.createElement('div');
-            swiperIndexItem.innerHTML = i + 1;
-            swiperIndexItem.id = 'swiper-index-' + i;
-            swiperIndexItem.className = 'swiper-index';
-            swiperIndexGroup.appendChild(swiperIndexItem);
+            swiperIndexItem.innerHTML = this.focusPos + 1;
+            swiperIndexItem.id = 'swiper-index-item';
+            swiper.appendChild(swiperIndexItem);
         }
-        swiper.appendChild(swiperIndexGroup);
+
         // 启动图片循环播放
         this.triggerTimer();
     };
@@ -120,18 +129,16 @@ function SwiperModule() {
      */
     this.focusOn = function () {
         clearInterval(this.timerId);
-        // document.getElementById('swiper').style.backgroundImage =
-        //     this.remoteImage ? cmsConfig.imgUrl + this.album[this.position].img : this.album[this.position].img;
         this.setBackgroundImage();
-        document.getElementById('swiper-index-' + this.position).style.borderColor = '#FFFF00';
+        document.getElementById('swiper-index-' + this.focusPos).style.borderColor = '#FFFF00';
     };
 
     /**
      *  失焦
      */
     this.focusOut = function () {
-        document.getElementById('swiper-index-' + this.position).style.backgroundColor = '';
-        document.getElementById('swiper-index-' + this.position).style.borderColor = '#FFFFFF';
+        document.getElementById('swiper-index-' + this.focusPos).style.backgroundColor = '';
+        document.getElementById('swiper-index-' + this.focusPos).style.borderColor = '#FFFFFF';
     };
 
     /**
@@ -139,14 +146,14 @@ function SwiperModule() {
      * @param direction
      */
     this.moveX = function (direction) {
-        this.position += direction;
-        if (this.position >= 0 && this.position < this.album.length) {
+        this.focusPos += direction;
+        if (this.focusPos >= 0 && this.focusPos < this.album.length) {
             return 0;
-        } else if (this.position < 0) {
-            this.position = 0;
+        } else if (this.focusPos < 0) {
+            this.focusPos = 0;
             return -1;
         } else {
-            this.position = this.album.length - 1;
+            this.focusPos = this.album.length - 1;
             return -1;
         }
     };
@@ -156,14 +163,14 @@ function SwiperModule() {
      * @returns {number}
      */
     this.moveY = function (direction) {
-        this.position += direction;
-        if (this.position >= 0 && this.position < this.album.length) {
+        this.focusPos += direction;
+        if (this.focusPos >= 0 && this.focusPos < this.album.length) {
             return 0;
-        } else if (this.position < 0) {
-            this.position = 0;
+        } else if (this.focusPos < 0) {
+            this.focusPos = 0;
             return -1;
         } else {
-            this.position = this.album.length - 1;
+            this.focusPos = this.album.length - 1;
             return -1;
         }
     };
@@ -187,21 +194,21 @@ function SwiperModule() {
                 focusPos: focusPos
             }
         };
-        if (this.album[this.position].flag === 0) {
+        if (this.album[this.focusPos].flag === 0) {
             params.PG_TEXT = {
-                resourceId: this.album[this.position].resourceId,
+                resourceId: this.album[this.focusPos].resourceId,
                 backURL: backURL
             };
             postfix = transferComponent.package(params);
             window.location.href = 'detail.html' + postfix;
         }
-        else if (this.album[this.position].flag === 1) {
+        else if (this.album[this.focusPos].flag === 1) {
             params.VIDEO = {
                 backURL: transferComponent.backUrl(),
                 fileName: transferComponent.cursor.fileName,
                 focusArea: focusArea,
                 focusPos: focusPos,
-                assertId: this.album[this.position].assertId
+                assertId: this.album[this.focusPos].assertId
             };
             postfix = transferComponent.package(params);
             window.location.href = 'video.html' + postfix;
@@ -220,10 +227,21 @@ function SwiperModule() {
      * 设置背景图片
      */
     this.setBackgroundImage = function () {
-        var bgImage = this.remoteImage ? 'url(' + cmsConfig.imgUrl + this.album[this.position].img + ')' : this.album[this.position].img;
+        var bgImage;
+
+        if (cmsConfig.environment === 'DEBUG') {
+            bgImage = this.album[this.focusPos].img;
+        } else {
+            bgImage = 'url(' + cmsConfig.imgUrl + this.album[this.focusPos].img + ')';
+        }
+
         // document.getElementById('debug-message').innerHTML += '<br/>' + 'setBackgroundImage ==>  background image ====> ' + bgImage;
         document.getElementById('swiper').style.backgroundImage = bgImage;
-        document.getElementById('swiper-index-' + this.position).style.backgroundColor = '#13934F';
+        if (this.showSwiperIndexGroup) {
+            document.getElementById('swiper-index-' + this.focusPos).style.backgroundColor = '#13934F';
+        } else {
+            document.getElementById('swiper-index-item').innerHTML = (this.focusPos + 1).toString();
+        }
     };
 
     /**
@@ -234,12 +252,13 @@ function SwiperModule() {
 
         clearInterval(this.timerId);
         this.setBackgroundImage();
-        document.getElementById('swiper-index-' + this.position).style.backgroundColor = '#13934F';
 
         this.timerId = setInterval(function () {
-            document.getElementById('swiper-index-' + that.position).style.backgroundColor = '';
-            that.position = (that.position + 1) % that.album.length;
-            // document.getElementById('debug-message').innerHTML += '<br/>' + 'triggerTimer ==>  position ====> ' + that.position;
+            if (that.showSwiperIndexGroup) {
+                document.getElementById('swiper-index-' + that.focusPos).style.backgroundColor = '';
+            }
+            that.focusPos = (that.focusPos + 1) % that.album.length;
+            // document.getElementById('debug-message').innerHTML += '<br/>' + 'triggerTimer ==>  focusPos ====> ' + that.focusPos;
             that.setBackgroundImage();
         }, that.interval);
     };

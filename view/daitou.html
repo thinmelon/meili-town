@@ -123,7 +123,7 @@
         this.itemLeft = 1030;
         this.itemTop = 198;
         this.itemWidth = 218;
-        this.itemHeight = 32;
+        this.itemHeight = 42;
         this.itemMoreLeft = 1118;
         this.itemMoreTop = 570;
         this.itemMoreWidth = 132;
@@ -201,7 +201,7 @@
 //                    console.log(this.cursor.bar.barItemArray[this.cursor.bar.focusPos].listResourceId);
                     this.cursor.swiper.resourceId = this.cursor.bar.barItemArray[this.cursor.bar.focusPos].swiperResourceId;
                     this.cursor.swiper.album = [];                  //  清空海报图集
-                    this.cursor.swiper.position = 0;                //  重置当前海报的位置
+                    this.cursor.swiper.focusPos = 0;                //  重置当前海报的位置
                     this.cursor.list.resourceId = this.cursor.bar.barItemArray[this.cursor.bar.focusPos].listResourceId;
                     this.cursor.swiper.init();
                     this.cursor.list.init(function () {

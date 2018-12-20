@@ -7,6 +7,8 @@ function TexturesModule() {
     this.imageIndex = 0;
     this.swiper = null;
     this.pager = null;
+    this.timerId = 0;                   //  timer ID
+    this.interval = 3000;               //  图片滚动的时间间隔
     /**
      *  滚动时间间隔
      */
@@ -52,6 +54,10 @@ function TexturesModule() {
             navRightElement.style.left = this.navRightElementLeft + 'px';
             navRightElement.style.backgroundImage = 'url(../images/detail/right.png)';
 
+            this.timerId = setInterval(function () {                                        //  定时器
+                that.imageIndex = (that.imageIndex + 1) % that.gallery.length;              //  一定时间间隔自动切换图片
+                document.getElementById('drawing-area').style.backgroundImage = that.gallery[that.imageIndex]
+            }, that.interval);
         } else {
             this.pager = new PagerModule();
 
@@ -61,7 +67,7 @@ function TexturesModule() {
                 this.swiper.swiperLeft = 130;
                 this.swiper.swiperWidth = 500;
                 this.swiper.swiperHeight = 332;
-                this.swiper.remoteImage = true;
+                this.swiper.showSwiperIndexGroup = false;
 
                 document.getElementById('textures-trapper').className = 'textures-trapper';
                 document.getElementById('textures-text').className = 'textures-text';
@@ -94,6 +100,6 @@ function TexturesModule() {
             drawingAreaElement.style.backgroundImage = this.gallery[index];
             this.imageIndex = index;
         }
-
     }
+
 }

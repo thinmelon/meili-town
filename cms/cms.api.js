@@ -12,7 +12,7 @@ var cmsApi = {
         postman.createXmlHttpRequest(
             function (result) {
                 var json = eval('(' + result + ')');
-                // document.getElementById('debug-message').innerHTML += '<br/>' + ' Response:' + result;
+                //document.getElementById('debug-message').innerHTML += '<br/>' + ' Response:' + result;
                 response(json);
             },
             function (err) {
