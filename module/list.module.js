@@ -25,23 +25,27 @@ function ListModule() {
     this.itemMoreWidth = 158;
     this.itemMoreHeight = 42;
 
-    this.listItemTop = 50;
-    this.interval = 42;
+    this.listItemTop = 20;
+    this.interval = 39;
     this.marqueeCount = 13;
 
     this.noticesBoardBarWidth = 380;
     this.noticesBoardBarHeight = 40;
     this.noticesBoardBarBgSrc = 'url(../images/list/list-item-bar.png) no-repeat';
-    this.noticesBoardBarText = '最新动态';
+    this.noticesBoardBarText = '';
     this.noticesBoardBarColor = '#FFF';
     this.noticesBoardBarFontSize = '19pt';
+
+    this.noticesBoardContentTop = 24;
+    this.noticesBoardContentLeft = 0;
 
     this.resourceId = '';
 
     this.init = function (callback) {
         var that = this,
             noticesBoard,
-            noticesBoardBar;
+            noticesBoardBar,
+            noticesBoardContent;
 
         noticesBoard = document.getElementById('notices_board');
         noticesBoard.style.left = this.boardLeft + 'px';
@@ -58,6 +62,10 @@ function ListModule() {
         noticesBoardBar.style.textAlign = 'center';
         noticesBoardBar.innerHTML = this.noticesBoardBarText;
 
+        noticesBoardContent = document.getElementById('notices_board_content');
+        noticesBoardContent.style.left = this.noticesBoardContentLeft + 'px';
+        noticesBoardContent.style.top = this.noticesBoardContentTop + 'px';
+
         if (cmsConfig.environment === 'DEBUG') {
             var test = [
                 {assetid: 611, title: '城厢区是福建省莆田市辖区，亦称...', img: '', flag: 1, id: 111},
@@ -66,6 +74,9 @@ function ListModule() {
                 {assetid: 611, title: '城厢区是福建省莆田市辖区，亦称...', img: '1', flag: 1, id: 111},
                 {assetid: 611, title: '涵江区位于福建省莆田市东部沿海...', flag: 0, id: 111},
                 {assetid: 611, title: '秀屿区位于福建东南沿海中部，与...', flag: 0, id: 111},
+                {assetid: 611, title: '湄洲湾北岸经济开发区是经国家发... 副本 2', img: '1', flag: 0, id: 111},
+                {assetid: 611, title: '湄洲湾北岸经济开发区是经国家发... 副本 2', img: '1', flag: 0, id: 111},
+                {assetid: 611, title: '湄洲湾北岸经济开发区是经国家发... 副本 2', img: '1', flag: 0, id: 111},
                 {assetid: 611, title: '湄洲湾北岸经济开发区是经国家发... 副本 2', img: '1', flag: 0, id: 111},
                 {assetid: 611, title: '湄洲湾北岸经济开发区是经国家发... 副本 2', img: '1', flag: 0, id: 111},
                 {assetid: 611, title: '湄洲湾北岸经济开发区是经国家发... 副本 2', img: '1', flag: 0, id: 111}
@@ -111,14 +122,14 @@ function ListModule() {
         for (j = 0, length = array.length; (j < length) && (j < this.listItemNum); j++) {
             newListItem = document.createElement('div');
             newListItem.className = 'list_item';
-            newListItem.style.width = (this.itemWidth - 10) + 'px';
+            newListItem.style.width = (this.itemWidth - 5) + 'px';
             newListItem.style.top = this.listItemTop + (j * this.interval) + 'px';
             newListItemText = document.createElement('div');
             newListItemText.id = 'list_item_text_' + j;
             newListItemText.className = 'list_item_text';
             newListItemText.innerHTML = array[j].title;
             newListItemText.style.color = '#000000';
-            newListItemText.style.width = (this.itemWidth - 20) + 'px';
+            newListItemText.style.width = (this.itemWidth - 5) + 'px';
             newListItem.appendChild(newListItemText);
             boardElement.appendChild(newListItem);
 

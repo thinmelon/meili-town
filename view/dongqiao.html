@@ -10,8 +10,8 @@
     <div id="bar" class="bar"></div>
     <div id="swiper" class="swiper"></div>
     <div id="notices_board" class="notices_board">
-        <div id="notices_board_bar"></div>
-        <div id="notices_board_content"></div>
+        <div id="notices_board_bar" class="notices_board_bar"></div>
+        <div id="notices_board_content" class="notices_board_content"></div>
         <div class="list-item-more"></div>
     </div>
     <div id="cursor"></div>
@@ -109,10 +109,10 @@
     function SwiperComponent(resId) {
         SwiperModule.call(this);
 
-        this.swiperTop = 150;
+        this.swiperTop = 125;
         this.swiperLeft = 178;
-        this.swiperWidth = 824;
-        this.swiperHeight = 467;
+        this.swiperWidth = 828;
+        this.swiperHeight = 492;
         this.resourceId = resId;
     }
 
@@ -122,20 +122,20 @@
         // 属性
         this.focusPos = 0;
         this.boardLeft = 1015;
-        this.boardTop = 152;
-        this.boardWidth = 240;
-        this.boardHeight = 465;
-        this.noticesBoardBarWidth = 240;
-        this.noticesBoardBarHeight = 47;
-        this.itemLeft = 1030;
-        this.itemTop = 198;
-        this.itemWidth = 218;
-        this.itemHeight = 42;
-        this.itemMoreLeft = 1118;
-        this.itemMoreTop = 570;
+        this.boardTop = 125;
+        this.boardWidth = 206;
+        this.boardHeight = 492;
+        this.noticesBoardBarWidth = 206;
+        this.noticesBoardBarHeight = 40;
+        this.itemLeft = 1018;
+        this.itemTop = 168;
+        this.itemWidth = 200;
+        this.itemHeight = 30;
+        this.itemMoreLeft = 1080;
+        this.itemMoreTop = 565;
         this.itemMoreWidth = 132;
-        this.itemMoreHeight = 32;
-        this.listItemNum = 8;
+        this.itemMoreHeight = 30;
+        this.listItemNum = 10;
         this.resourceId = resId;                    //  默认使用BAR第一个元素的resourceId
 
         // 方法

@@ -10,7 +10,7 @@
     background-size: 100%;
 }
 
-.index-bg {
+.daitou {
     position: absolute;
     left: 0;
     top: 0;
@@ -51,10 +51,10 @@
 /* ----  栏目  ---- */
 .bar {
     position: absolute;
-    top: 148px;
+    top: 125px;
     left: 56px;
     width: 115px;
-    height: 468px;
+    height: 492px;
     background: url(../images/bar/bar-bg.png) no-repeat;
 }
 
@@ -112,19 +112,31 @@
     background: url(../images/list/bg-list-item.png);
 }
 
+.notices_board_bar {
+    position: absolute;
+    z-index: 999;
+}
+
+.notices_board_content {
+    position: absolute;
+    width: 206px;
+    height: 464px;
+    background: url(../images/list/bg_content.jpg);
+}
+
 .list_item {
     position: absolute;
-    left: 10px;
+    left: 3px;
     height: 30px;
 }
 
 .list_item_text {
     position: absolute;
-    left: 10px;
+    left: 3px;
     top: 0;
     height: 29px;
     line-height: 30px;
-    font: 25px "Microsoft YaHei";
+    font: 21px "Microsoft YaHei";
     overflow: hidden;
 }
 
@@ -134,7 +146,7 @@
     width: 126px;
     height: 24px;
     right: 5px;
-    bottom: 20px;
+    bottom: 25px;
 }
 
 /* ----  按键  ---- */
