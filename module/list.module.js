@@ -27,7 +27,7 @@ function ListModule() {
 
     this.listItemTop = 20;
     this.interval = 39;
-    this.marqueeCount = 13;
+    this.marqueeCount = 9;
 
     this.noticesBoardBarWidth = 380;
     this.noticesBoardBarHeight = 40;
@@ -129,7 +129,7 @@ function ListModule() {
             newListItemText.className = 'list_item_text';
             newListItemText.innerHTML = array[j].title;
             newListItemText.style.color = '#000000';
-            newListItemText.style.width = (this.itemWidth - 5) + 'px';
+            newListItemText.style.width = (this.itemWidth - 1) + 'px';
             newListItem.appendChild(newListItemText);
             boardElement.appendChild(newListItem);
 

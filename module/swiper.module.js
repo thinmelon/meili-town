@@ -54,6 +54,8 @@ function SwiperModule() {
             if (this.resourceId !== 0) {
                 cmsApi.getListItems(this.resourceId, this.maxCount, 1, function (response) {
                     if (response.hasOwnProperty('code') && ('1' === response.code || 1 === response.code)) {
+                        //  清空数组并移除结点
+                        that.removeAllSwiperItem();
                         //that.remoteImage = true;        //  显示服务器上的图片
                         for (var j = 0, length = response.dataArray.length; (j < length) && (j < that.maxCount); j++) {
                             flag = parseInt(response.dataArray[j].flag);
@@ -81,6 +83,23 @@ function SwiperModule() {
     };
 
     /**
+     * 移除所有子项
+     */
+    this.removeAllSwiperItem = function () {
+        var swiperElement = document.getElementById('swiper');
+
+        while (this.album.length > 0) {
+            this.album.pop();
+        }
+
+        while (swiperElement.hasChildNodes()) {
+            swiperElement.removeChild(swiperElement.firstChild);
+        }
+
+        this.focusPos = 0;
+    };
+
+    /**
      *  重绘
      */
     this.render = function () {
@@ -96,9 +115,9 @@ function SwiperModule() {
         swiper.style.height = this.swiperHeight + 'px';
 
         //  清空数组并移除结点
-        for (i = children.length - 1; i >= 0; i--) {
-            swiper.removeChild(children[i]);
-        }
+        // for (i = children.length - 1; i >= 0; i--) {
+        //     swiper.removeChild(children[i]);
+        // }
 
         if (this.showSwiperIndexGroup) {
             // 创建滑块图片下标组

@@ -130,11 +130,11 @@
         this.itemLeft = 1018;
         this.itemTop = 168;
         this.itemWidth = 200;
-        this.itemHeight = 30;
+        this.itemHeight = 32;
         this.itemMoreLeft = 1080;
         this.itemMoreTop = 565;
         this.itemMoreWidth = 132;
-        this.itemMoreHeight = 30;
+        this.itemMoreHeight = 32;
         this.listItemNum = 10;
         this.resourceId = resId;                    //  默认使用BAR第一个元素的resourceId
 
@@ -204,11 +204,7 @@
                     break;
                 case 5:         // 栏目
                     this.cursor.bar.moveY(direction, true);
-//                    console.log(this.cursor.bar.barItemArray[this.cursor.bar.focusPos].swiperResourceId);
-//                    console.log(this.cursor.bar.barItemArray[this.cursor.bar.focusPos].listResourceId);
                     this.cursor.swiper.resourceId = this.cursor.bar.barItemArray[this.cursor.bar.focusPos].swiperResourceId;
-                    this.cursor.swiper.album = [];                  //  清空海报图集
-                    this.cursor.swiper.focusPos = 0;                //  重置当前海报的位置
                     this.cursor.list.resourceId = this.cursor.bar.barItemArray[this.cursor.bar.focusPos].listResourceId;
                     this.cursor.swiper.init();
                     this.cursor.list.init(function () {
