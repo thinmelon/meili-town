@@ -90,6 +90,7 @@ function MoreModule() {
             if (this.resourceId !== 0) {
                 cmsApi.getListItems(this.resourceId, this.maxItemsPerPage, pageIndex, function (response) {
                     if ('1' === response.code || 1 === response.code) {
+                        that.removeAllMoreItems();
                         if (response.dataArray.length > 0) {
                             that.pageIndex = pageIndex;
                             that.totalPages = response.total_page;
