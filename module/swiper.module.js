@@ -197,22 +197,14 @@ function SwiperModule() {
     /**
      * 选择
      * @param transferComponent
-     * @param focusArea
-     * @param focusPos
+     * @param params
      * @param backURL
      * @param resourceId
      */
-    this.doSelect = function (transferComponent, focusArea, focusPos, backURL, resourceId) {
+    this.doSelect = function (transferComponent, params, backURL, resourceId) {
         var
-            postfix = '',
-            params;
+            postfix = '';
 
-        params = {
-            'PG-ONE': {
-                focusArea: focusArea,
-                focusPos: focusPos
-            }
-        };
         if (this.album[this.focusPos].flag === 0) {
             params.PG_TEXT = {
                 resourceId: this.album[this.focusPos].resourceId,
@@ -225,8 +217,9 @@ function SwiperModule() {
             params.VIDEO = {
                 backURL: transferComponent.backUrl(),
                 fileName: transferComponent.cursor.fileName,
-                focusArea: focusArea,
-                focusPos: focusPos,
+                barFocusPos: params['PG-ONE'].barFocusPos,
+                focusArea: params['PG-ONE'].focusArea,
+                focusPos: params['PG-ONE'].focusPos,
                 assertId: this.album[this.focusPos].assertId
             };
             postfix = transferComponent.package(params);

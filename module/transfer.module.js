@@ -20,29 +20,8 @@ function TransferModule() {
     this.init = function () {
         var key,
             rawData,
-            _url,
-            backURL,
-            backParams;
+            _url;
 
-        //document.getElementById('debug-message').innerHTML += '<br/>' + 'Transfer ==>  Location ====> ' + window.location.href;
-        //document.getElementById('debug-message').innerHTML += '<br/>' + 'Transfer ==>  environment ====> ' + cmsConfig.environment;
-        //if (cmsConfig.environment === 'PRODUCT') {
-        //backURL = GMObj.pathManager.getBackURL(window.location.href);
-        //document.getElementById('debug-message').innerHTML += '<br/>' + 'Transfer ==>  BackURL ====> ' + backURL;
-        //  获取backParams
-
-        //if ('' !== backURL && null !== backURL && 0 !== backURL) {
-        //    backParams = GMObj.pathManager.getBackParam(backURL);
-        //} else {
-        //    backParams = GMObj.pathManager.getBackParam(window.location.href);
-        //}
-        //}
-
-        // 如果backParams不为空，跳转至对应地址
-        //document.getElementById('debug-message').innerHTML += '<br/>' + 'Transfer ==>  BackParams ====> ' + backParams;
-        //if (typeof backParams !== 'undefined' && '' !== backParams && null !== backParams && backParams !== 'undefined') {
-        //    window.location.href = backParams;
-        //} else {
         _url = window.location.search;
         //document.getElementById('debug-message').innerHTML += '<br/>' + 'search: ' + decodeURIComponent(_url);
 
@@ -99,6 +78,9 @@ function TransferModule() {
         if (this.cursor && key === this.cursor.fileName) {
             value = jsonUtils.parse(rawData);
             if (value.hasOwnProperty('focusArea')) {
+                if (value.hasOwnProperty('barFocusPos') && this.cursor.bar) {
+                    this.cursor.bar.focusPos = parseInt(value.barFocusPos);
+                }
                 // 光标所在区域
                 this.cursor.focusArea = parseInt(value.focusArea);
                 switch (this.cursor.focusArea) {
@@ -129,9 +111,9 @@ function TransferModule() {
                             this.cursor.more.focusPosY = parseInt(value.focusPosY);
                         }
                         break;
-                    case 5:         // BAR
-                        if (value.hasOwnProperty('focusPos') && this.cursor.bar) {
-                            this.cursor.bar.focusPos = parseInt(value.focusPos);
+                    case 6:         // Swiper
+                        if (value.hasOwnProperty('focusPos') && this.cursor.swiper) {
+                            this.cursor.swiper.focusPos = parseInt(value.focusPos);
                         }
                         break;
                     default:
@@ -198,10 +180,21 @@ function TransferModule() {
             }
             if (value.hasOwnProperty('backURL')) {
                 backUrl = decodeURIComponent(value.backURL);
+                //  针对 从一级页面进入更多内容 的情况
                 if (value.hasOwnProperty('fileName')
                     && value.hasOwnProperty('focusArea')
-                    && value.hasOwnProperty('focusPos')) {
-                    backUrl += '?' + value.fileName + '=' + encodeURIComponent('{focusArea:' + value.focusArea + ',focusPos:' + value.focusPos + '}');
+                    && value.hasOwnProperty('focusPosX')
+                    && value.hasOwnProperty('focusPosY')
+                    && value.hasOwnProperty('resourceId')
+                    && value.hasOwnProperty('morePageBackURL')
+                    && value.hasOwnProperty('pageIndex')
+                    && value.hasOwnProperty('entryPageBarFocusPos')
+                    && value.hasOwnProperty('entryPageFocusArea')
+                    && value.hasOwnProperty('entryPageFocusPos')) {
+                    backUrl += '?' + value.fileName + '='
+                        + encodeURIComponent('{focusArea:' + value.focusArea + ',focusPosX:' + value.focusPosX + ',focusPosY:' + value.focusPosY
+                            + ',resourceId:' + value.resourceId + ',backURL:\'' + value.morePageBackURL + '\',pageIndex:' + value.pageIndex
+                            + ',entryPageBarFocusPos:' + value.entryPageBarFocusPos + ',entryPageFocusArea:' + value.entryPageFocusArea + ',entryPageFocusPos:' + value.entryPageFocusPos + '}');
                 }
                 //  针对 更多内容 页面
                 else if (value.hasOwnProperty('fileName')
@@ -220,6 +213,16 @@ function TransferModule() {
                     && value.hasOwnProperty('focusPosX')
                     && value.hasOwnProperty('focusPosY')) {
                     backUrl += '?' + value.fileName + '=' + encodeURIComponent('{focusArea:' + value.focusArea + ',focusPosX:' + value.focusPosX + ',focusPosY:' + value.focusPosY + '}');
+                }
+                else if (value.hasOwnProperty('fileName')
+                    && value.hasOwnProperty('focusArea')
+                    && value.hasOwnProperty('focusPos')) {
+                    if (value.hasOwnProperty('barFocusPos')) {
+                        backUrl += '?' + value.fileName + '=' + encodeURIComponent('{focusArea:' + value.focusArea + ',focusPos:' + value.focusPos + ',barFocusPos:' + value.barFocusPos + '}');
+                    } else {
+                        backUrl += '?' + value.fileName + '=' + encodeURIComponent('{focusArea:' + value.focusArea + ',focusPos:' + value.focusPos + '}');
+                    }
+
                 }
                 this.cursor.video.backURL = encodeURIComponent(backUrl);
                 document.getElementById('debug-message').innerHTML += '<br/> ' + 'backURL: ' + decodeURIComponent(this.cursor.video.backURL);
@@ -271,10 +274,6 @@ function TransferModule() {
             if (value.hasOwnProperty('resourceId')) {
                 this.cursor.more.resourceId = value.resourceId;
             }
-            // 更多页面元素的资源类型： 图文 或者 视频监控
-            // if (value.hasOwnProperty('resourceType')) {
-            //     this.cursor.more.resourceType = value.resourceType;
-            // }
             // 返回地址
             if (value.hasOwnProperty('backURL')) {
                 this.cursor.more.backURL = value.backURL;
@@ -286,6 +285,14 @@ function TransferModule() {
             // 当前分页索引
             if (value.hasOwnProperty('pageIndex')) {
                 this.cursor.more.pageIndex = parseInt(value.pageIndex);
+            }
+            // 入口页面的属性设置
+            if (value.hasOwnProperty('entryPageBarFocusPos')
+                && value.hasOwnProperty('entryPageFocusArea')
+                && value.hasOwnProperty('entryPageFocusPos')) {
+                this.cursor.more.entryPageBarFocusPos = parseInt(value.entryPageBarFocusPos);
+                this.cursor.more.entryPageFocusArea = parseInt(value.entryPageFocusArea);
+                this.cursor.more.entryPageFocusPos = parseInt(value.entryPageFocusPos);
             }
         }
     };
@@ -366,6 +373,22 @@ function TransferModule() {
      */
     this.empty = function () {
         this.record = [];
+    };
+
+    /**
+     * 是否存在指定KEY
+     * @param key
+     * @returns {boolean}
+     */
+    this.hasKey = function (key) {
+        for (var i = 0, length = this.record.length; i < length; i++) {
+            for (var name in this.record[i]) {
+                if (name === key) {
+                    return true;
+                }
+            }
+        }
+        return false;
     };
 
     /**

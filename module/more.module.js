@@ -19,8 +19,10 @@ function MoreModule() {
 
     this.moreItemArray = [];
     this.resourceId = 0;                    //  更多内容内的资源ID
-    this.resourceType = 'textures';         //  资源类型初始为图文形式
     this.backURL = '';                      //  回退地址
+    this.entryPageBarFocusPos = 0;          //  从一级页面进入更多内容的标题栏位置
+    this.entryPageFocusArea = 0;            //
+    this.entryPageFocusPos = 0;             //
 
     /**
      * 向上取整
@@ -133,14 +135,14 @@ function MoreModule() {
         }
 
         this.columnsPerPage = this.MathCeil(this.itemsPerPage, this.maxItemsPerColumn);
-        console.log('columnsPerPage =====> ' + this.columnsPerPage);
+        // console.log('columnsPerPage =====> ' + this.columnsPerPage);
 
         for (i = 0; i < length && i < this.maxItemsPerPage; i++) {
             // card = document.createElement('div');
             // card.className = 'more-page-item';
 
             var columnNo = this.MathCeil(i + 1, this.maxItemsPerColumn) - 1;
-            console.log('columnNo =====> ' + columnNo);
+            // console.log('columnNo =====> ' + columnNo);
 
             cardText = document.createElement('div');
             cardText.id = 'more-page-item-text-' + i;
@@ -197,10 +199,13 @@ function MoreModule() {
             if (this.focusPosX >= this.moreItemArray[this.focusPosY].length) {
                 this.focusPosX = this.moreItemArray[this.focusPosY].length - 1;
             }
+            return 0;
         } else if (this.focusPosY < 0) {
             this.focusPosY = 0;
+            return -1;
         } else {
             this.focusPosY = this.columnsPerPage - 1;
+            return -1;
         }
     };
 

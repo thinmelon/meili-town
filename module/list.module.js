@@ -113,25 +113,20 @@ function ListModule() {
     this.addListItem = function (array) {
         var j,
             length,
-            newListItem,
             newListItemText,
             boardElement = document.getElementById('notices_board_content');
 
         this.removeAllListItem();
 
         for (j = 0, length = array.length; (j < length) && (j < this.listItemNum); j++) {
-            newListItem = document.createElement('div');
-            newListItem.className = 'list_item';
-            newListItem.style.width = (this.itemWidth - 5) + 'px';
-            newListItem.style.top = this.listItemTop + (j * this.interval) + 'px';
             newListItemText = document.createElement('div');
             newListItemText.id = 'list_item_text_' + j;
             newListItemText.className = 'list_item_text';
             newListItemText.innerHTML = array[j].title;
             newListItemText.style.color = '#000000';
             newListItemText.style.width = (this.itemWidth - 1) + 'px';
-            newListItem.appendChild(newListItemText);
-            boardElement.appendChild(newListItem);
+            newListItemText.style.top = this.listItemTop + (j * this.interval) + 'px';
+            boardElement.appendChild(newListItemText);
 
             this.listItemTitleArray.push({
                 assetID: array[j].assetid,
@@ -204,17 +199,10 @@ function ListModule() {
         }
     };
 
-    this.doSelect = function (transferComponent, focusArea, focusPos, backURL, resourceId) {
+    this.doSelect = function (transferComponent, params, backURL, resourceId) {
         var
-            postfix = '',
-            params;
+            postfix = '';
 
-        params = {
-            'PG-ONE': {
-                focusArea: focusArea,
-                focusPos: focusPos
-            }
-        };
         if (this.listItemTitleArray[this.focusPos].flag === 0) {
             params.PG_TEXT = {
                 resourceId: this.listItemTitleArray[this.focusPos].id,
@@ -227,8 +215,9 @@ function ListModule() {
             params.VIDEO = {
                 backURL: transferComponent.backUrl(),
                 fileName: transferComponent.cursor.fileName,
-                focusArea: focusArea,
-                focusPos: focusPos,
+                barFocusPos: params['PG-ONE'].barFocusPos,
+                focusArea: params['PG-ONE'].focusArea,
+                focusPos: params['PG-ONE'].focusPos,
                 assertId: this.listItemTitleArray[this.focusPos].assetID
             };
             postfix = transferComponent.package(params);
@@ -237,7 +226,10 @@ function ListModule() {
             params.PG_MORE = {
                 resourceId: resourceId,
                 backURL: backURL,
-                pageIndex: 1
+                pageIndex: 1,
+                entryPageBarFocusPos: params['PG-ONE'].barFocusPos,
+                entryPageFocusArea: params['PG-ONE'].focusArea,
+                entryPageFocusPos: params['PG-ONE'].focusPos
             };
             postfix = transferComponent.package(params);
             window.location.href = 'more.html' + postfix;

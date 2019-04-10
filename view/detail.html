@@ -64,9 +64,11 @@
 //                    that.cursor.textures.pager.turn(document.getElementById('textures-text'), document.getElementById('textures-pager'), 1);
                     that.cursor.textures.changeImage(1);
                     return false;
+                case 'KEY_UP':
                 case 'KEY_PAGE_UP':
                     that.cursor.textures.pager.turn(document.getElementById('textures-text'), document.getElementById('textures-pager'), -1);
                     return false;
+                case 'KEY_DOWN':
                 case 'KEY_PAGE_DOWN':
                     that.cursor.textures.pager.turn(document.getElementById('textures-text'), document.getElementById('textures-pager'), 1);
                     return false;

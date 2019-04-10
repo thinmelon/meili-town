@@ -45,7 +45,9 @@
             this.focusOut();
             switch (this.focusArea) {
                 case 4:
-                    this.more.moveX(direction);
+                    if (-1 === this.more.moveX(direction)) {
+                        this.changePage(direction);
+                    }
                     break;
 //                case 5:
 //                    this.bar.moveX(direction, true);
@@ -90,7 +92,17 @@
         // 方法
         this.doBack = function () {
             this.remove(this.cursor.fileName);
-            window.location.href = this.cursor.more.backURL + this.package([]);
+            if (this.hasKey('PG-ONE')) {
+                window.location.href = this.cursor.more.backURL + this.package([]);
+            } else {
+                window.location.href = this.cursor.more.backURL + this.package({
+                        'PG-ONE': {
+                            barFocusPos: this.cursor.more.entryPageBarFocusPos,
+                            focusArea: this.cursor.more.entryPageFocusArea,
+                            focusPos: this.cursor.more.entryPageFocusPos
+                        }
+                    });
+            }
         };
 
         this.doSelect = function () {
@@ -109,7 +121,10 @@
                             focusPosY: this.cursor.more.focusPosY,
                             resourceId: this.cursor.more.resourceId,
                             backURL: this.cursor.more.backURL,
-                            pageIndex: this.cursor.more.pageIndex
+                            pageIndex: this.cursor.more.pageIndex,
+                            entryPageBarFocusPos: this.cursor.more.entryPageBarFocusPos,
+                            entryPageFocusArea: this.cursor.more.entryPageFocusArea,
+                            entryPageFocusPos: this.cursor.more.entryPageFocusPos
                         };
                         params.PG_TEXT = {
                             resourceId: this.cursor.more.moreItemArray[this.cursor.more.focusPosY][this.cursor.more.focusPosX].id,
@@ -127,7 +142,10 @@
                             resourceId: this.cursor.more.resourceId,
                             morePageBackURL: this.cursor.more.backURL,
                             pageIndex: this.cursor.more.pageIndex,
-                            assertId: this.cursor.more.moreItemArray[this.cursor.more.focusPosY][this.cursor.more.focusPosX].assetid
+                            assertId: this.cursor.more.moreItemArray[this.cursor.more.focusPosY][this.cursor.more.focusPosX].assetid,
+                            entryPageBarFocusPos: this.cursor.more.entryPageBarFocusPos,
+                            entryPageFocusArea: this.cursor.more.entryPageFocusArea,
+                            entryPageFocusPos: this.cursor.more.entryPageFocusPos
                         };
                         postfix = this.package(params);
                         window.location.href = 'video.html' + postfix;
